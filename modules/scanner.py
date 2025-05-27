@@ -1,7 +1,9 @@
-import json
+import pywifi
 
-def detect_evil_twin(current_ssids):
-    with open('config/safe_ssids.json') as f:
-        safe = json.load(f)["trusted_ssids"]
-    suspicious = [ssid for ssid in current_ssids if ssid in safe and current_ssids.count(ssid) > 1]
-    return suspicious
+def scan_networks():
+    wifi = pywifi.PyWiFi()
+    iface = wifi.interfaces()[0]
+    iface.scan()
+    results = iface.scan_results()
+    ssids = set([n.ssid for n in results])
+    return list(ssids)
